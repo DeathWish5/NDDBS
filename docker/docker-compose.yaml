@@ -1,0 +1,121 @@
+
+version: '3'
+
+services:
+
+  cfg1:
+    container_name: cfg1
+    image: mongo
+    command: mongod --configsvr --replSet cfg --port 27017 --dbpath /data/db
+    ports:
+      - 40001:27017
+    volumes:
+      - ./volumes/cfg1:/data/db
+
+  cfg2:
+    container_name: cfg2
+    image: mongo
+    command: mongod --configsvr --replSet cfg --port 27017 --dbpath /data/db
+    ports:
+      - 40002:27017
+    volumes:
+      - ./volumes/cfg2:/data/db
+
+  cfg3:
+    container_name: cfg3
+    image: mongo
+    command: mongod --configsvr --replSet cfg --port 27017 --dbpath /data/db
+    ports:
+      - 40003:27017
+    volumes:
+      - ./volumes/cfg3:/data/db
+
+  dmbs1_svr1:
+    container_name: dbms1_svr1
+    image: mongo
+    command: mongod --shardsvr --replSet dbms1 --port 27017 --dbpath /data/db
+    ports:
+      - 40004:27017
+    volumes:
+      - ./volumes/dbms1v1:/data/db
+  
+  dmbs1_svr2:
+    container_name: dbms1_svr2
+    image: mongo
+    command: mongod --shardsvr --replSet dbms1 --port 27017 --dbpath /data/db
+    ports:
+      - 40005:27017
+    volumes:
+      - ./volumes/dbms1v2:/data/db
+  
+  dmbs1_svr3:
+    container_name: dbms1_svr3
+    image: mongo
+    command: mongod --shardsvr --replSet dbms1 --port 27017 --dbpath /data/db
+    ports:
+      - 40006:27017
+    volumes:
+      - ./volumes/dbms1v3:/data/db
+  
+  dmbs2_svr1:
+    container_name: dbms2_svr1
+    image: mongo
+    command: mongod --shardsvr --replSet dbms2 --port 27017 --dbpath /data/db
+    ports:
+      - 40007:27017
+    volumes:
+      - ./volumes/dbms2v1:/data/db
+  
+  dmbs2_svr2:
+    container_name: dbms2_svr2
+    image: mongo
+    command: mongod --shardsvr --replSet dbms2 --port 27017 --dbpath /data/db
+    ports:
+      - 40008:27017
+    volumes:
+      - ./volumes/dbms2v2:/data/db
+  
+  dmbs2_svr3:
+    container_name: dbms2_svr3
+    image: mongo
+    command: mongod --shardsvr --replSet dbms2 --port 27017 --dbpath /data/db
+    ports:
+      - 40009:27017
+    volumes:
+      - ./volumes/dbms2v3:/data/db
+
+  grid_svr1:
+    container_name: grid_svr1
+    image: mongo
+    command: mongod --shardsvr --replSet grid --port 27017 --dbpath /data/db
+    ports:
+      - 40010:27017
+    volumes:
+      - ./volumes/grid1:/data/db
+  
+  grid_svr2:
+    container_name: grid_svr2
+    image: mongo
+    command: mongod --shardsvr --replSet grid --port 27017 --dbpath /data/db
+    ports:
+      - 40011:27017
+    volumes:
+      - ./volumes/grid2:/data/db
+  
+  grid_svr3:
+    container_name: grid_svr3
+    image: mongo
+    command: mongod --shardsvr --replSet grid --port 27017 --dbpath /data/db
+    ports:
+      - 40012:27017
+    volumes:
+      - ./volumes/grid3:/data/db
+  
+  mongos:
+    container_name: mongos
+    image: mongo
+    command: mongos --configdb cfg/${HOSTIP}:40001,${HOSTIP}:40002,${HOSTIP}:40003 --bind_ip 0.0.0.0 --port 27017
+    ports:
+      - 40000:27017
+    volumes:
+      - ./volumes/mongos:/initdata
